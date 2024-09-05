@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Recommender</title>
+</head>
+<body>
+    <h1>Netflix Movie/TV Show Recommender</h1>
+    
+    <form action="/recommend" method="POST">
+        <label for="movie_name">Enter Movie/TV Show Name:</label><br><br>
+        <input type="text" id="movie_name" name="movie_name"><br><br>
+        <input type="submit" value="Get Recommendations">
+    </form>
+
+    {% if movie_name %}
+    <h2>Recommendations for "{{ movie_name }}"</h2>
+
+    {% if movies %}
+    <h3>Movies:</h3>
+    <ul>
+        {% for movie in movies %}
+        <li>{{ movie }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if tv_shows %}
+    <h3>TV Shows:</h3>
+    <ul>
+        {% for tv_show in tv_shows %}
+        <li>{{ tv_show }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% else %}
+    <p>No recommendations found.</p>
+    {% endif %}
+</body>
+</html>
