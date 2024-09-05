@@ -1,14 +1,27 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import numpy as np
+import requests
+import gdown
 import pickle
 
-# Загружаем сохранённые данные и модели
-netflix_data = pd.read_csv('netflix_data.csv')
-cosine_sim = np.load('model/cosine_sim_matrix.npy')
+# Ссылка на файл с Google Диска
+url = 'https://drive.google.com/uc?id=1jXf-qrJ8X5iIVheBkVbCTHFyG-ZZzG3B&export=download'
+
+# Скачиваем файл с помощью gdown
+gdown.download(url, 'cosine_sim_matrix.npy', quiet=False)
+
+# Загружаем файл .npy
+cosine_sim = np.load('cosine_sim_matrix.npy', allow_pickle=True)
+
+# Загружаем данные Netflix
+netflix_data = pd.read_csv('netflix_data.csv')  # Загружаем данные перед использованием
+
+# Загружаем TF-IDF векторизатор
 with open('model/tfidf_vectorizer.pkl', 'rb') as f:
     tfid = pickle.load(f)
 
+# Класс рекомендательной системы
 class FlixHub:
     def __init__(self, df, cosine_sim):
         self.df = df
@@ -35,7 +48,7 @@ class FlixHub:
 # Инициализируем Flask-приложение
 app = Flask(__name__)
 
-# Загружаем рекомендательную систему
+# Инициализируем рекомендательную систему
 flix_hub = FlixHub(netflix_data, cosine_sim)
 
 # Маршрут для главной страницы
@@ -53,3 +66,6 @@ def recommend():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
